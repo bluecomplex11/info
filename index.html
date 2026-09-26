@@ -16,10 +16,6 @@
     background:transparent;
     position:relative;
   }
-  .blob{position:fixed;pointer-events:none;z-index:0;filter:blur(26px);opacity:.55}
-  .blob i{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff,#ffffff 55%,rgba(255,255,255,0) 76%)}
-  .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;mix-blend-mode:multiply}
-
   /* ---------- top menu bar ---------- */
   .menubar{
     position:fixed;top:0;left:0;right:0;height:var(--bar-h);z-index:1000;
@@ -360,7 +356,7 @@
 </div>
 
 <!-- Notice -->
-<div class="window" id="win-notice">
+<div class="window" id="win-notice" style="left:8%;top:14%">
   <div class="titlebar drag">
     <div class="traffic"><span class="dot red" data-close></span><span class="dot yellow"></span><span class="dot green"></span></div>
     <div class="win-title">notice</div>
@@ -390,7 +386,7 @@
 </div>
 
 <!-- Couple -->
-<div class="window" id="win-couple">
+<div class="window" id="win-couple" style="left:26%;top:11%">
   <div class="titlebar drag">
     <div class="traffic"><span class="dot red" data-close></span><span class="dot yellow"></span><span class="dot green"></span></div>
     <div class="win-title">couple</div>
@@ -471,7 +467,7 @@ white camisole, mechanic jumpsuit, red racing jumpsuit, open jumpsuit, utility p
 </div>
 
 <!-- puppy folder contents -->
-<div class="window" id="win-puppy">
+<div class="window" id="win-puppy" style="left:50%;top:50%;transform:translate(-50%,-50%)">
   <div class="titlebar drag">
     <div class="traffic"><span class="dot red" data-close></span><span class="dot yellow"></span><span class="dot green"></span></div>
     <div class="win-title">puppy</div>
@@ -482,7 +478,7 @@ white camisole, mechanic jumpsuit, red racing jumpsuit, open jumpsuit, utility p
 </div>
 
 <!-- Link -->
-<div class="window" id="win-link">
+<div class="window" id="win-link" style="left:55%;top:16%">
   <div class="titlebar drag">
     <div class="traffic"><span class="dot red" data-close></span><span class="dot yellow"></span><span class="dot green"></span></div>
     <div class="win-title">link</div>
@@ -493,7 +489,7 @@ white camisole, mechanic jumpsuit, red racing jumpsuit, open jumpsuit, utility p
 </div>
 
 <!-- List -->
-<div class="window" id="win-list">
+<div class="window" id="win-list" style="left:38%;top:24%">
   <div class="titlebar drag">
     <div class="traffic"><span class="dot red" data-close></span><span class="dot yellow"></span><span class="dot green"></span></div>
     <div class="win-title">list</div>
@@ -502,48 +498,24 @@ white camisole, mechanic jumpsuit, red racing jumpsuit, open jumpsuit, utility p
 </div>
 
 <script>
-/* -- a few soft white cloud-blob clusters + faint grain, layered on top of the real photo tile -- */
-(function(){
-  const blobSpots = [
-    {left:'8%',  top:'40%', scale:1.3},
-    {left:'70%', top:'10%', scale:1.05},
-    {left:'92%', top:'66%', scale:1.3},
-  ];
-  blobSpots.forEach(spot=>{
-    const b = document.createElement('div');
-    b.className = 'blob';
-    b.style.left = spot.left; b.style.top = spot.top;
-    const r = 30*spot.scale, d = r*2, off = r*0.62;
-    b.innerHTML = `
-      <i style="width:${d}px;height:${d}px;left:0;top:${off}px"></i>
-      <i style="width:${d}px;height:${d}px;left:${off*2}px;top:${off}px"></i>
-      <i style="width:${d}px;height:${d}px;left:${off}px;top:0"></i>
-      <i style="width:${d}px;height:${d}px;left:${off}px;top:${off*2}px"></i>`;
-    document.body.appendChild(b);
-  });
-  const grainSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <filter id="grainFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>
-      <rect width="100%" height="100%" filter="url(#grainFilter)"/>
-    </svg>`;
-  const grainDiv = document.createElement('div');
-  grainDiv.className = 'grain';
-  grainDiv.innerHTML = grainSvg;
-  document.body.appendChild(grainDiv);
-})();
 
 /* ---------------- Korea real-time clock (no seconds) ---------------- */
+const mobileMQ = window.matchMedia('(max-width:600px)');
 function updateClock(){
   const now = new Date();
+  const isMobile = mobileMQ.matches;
   const parts = new Intl.DateTimeFormat('en-US',{
     timeZone:'Asia/Seoul',
+    ...(isMobile ? {} : {weekday:'short',day:'numeric',month:'short'}),
     hour:'numeric',minute:'2-digit',hour12:true
   }).formatToParts(now);
   const get = t => parts.find(p=>p.type===t)?.value || '';
-  document.getElementById('clock').textContent =
-    `${get('hour')}:${get('minute')} ${get('dayPeriod')}`;
+  document.getElementById('clock').textContent = isMobile
+    ? `${get('hour')}:${get('minute')} ${get('dayPeriod')}`
+    : `${get('weekday')} ${get('day')} ${get('month')} ${get('hour')}:${get('minute')} ${get('dayPeriod')}`;
 }
 updateClock(); setInterval(updateClock,15000);
+mobileMQ.addEventListener('change', updateClock);
 
 /* ---------------- random dm content on load ---------------- */
 (function(){
@@ -586,10 +558,12 @@ let zTop = 500;
 function openWindow(id){
   const w = document.getElementById(id);
   if(!w) return;
-  w.style.left = '50%';
-  w.style.top = '50%';
-  w.style.right = 'auto';
-  w.style.transform = 'translate(-50%,-50%)';
+  if(mobileMQ.matches){
+    w.style.left = '50%';
+    w.style.top = '50%';
+    w.style.right = 'auto';
+    w.style.transform = 'translate(-50%,-50%)';
+  }
   w.classList.add('open');
   zTop += 1; w.style.zIndex = zTop;
 }
