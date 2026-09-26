@@ -29,8 +29,8 @@
   }
   .menubar .left{display:flex;align-items:center;gap:18px}
   .menubar .heart-logo{font-size:15px;color:#e8799f}
-  .menu-item{cursor:pointer;font-weight:600;letter-spacing:.2px;transition:opacity .15s}
-  .menu-item:hover{opacity:.6}
+  .menu-item{display:flex;align-items:center;font-weight:600;letter-spacing:.2px}
+  .menu-icon{display:block;height:20px;width:auto}
   .menubar .right{display:flex;align-items:center;gap:12px;font-variant-numeric:tabular-nums}
   .wifi-icon{width:16px;height:16px;position:relative}
   .wifi-icon svg{width:100%;height:100%}
@@ -65,14 +65,16 @@
 
   /* ---------- windows / modals ---------- */
   .window{
-    position:fixed;z-index:500;display:none;
+    position:fixed;z-index:500;display:flex;
     width:520px;max-width:88vw;max-height:80vh;
     background:rgba(252,250,251,.98);
     border:1px solid #d9c6cf;border-radius:12px;
     box-shadow:0 22px 48px rgba(150,90,115,.28), 0 4px 12px rgba(150,90,115,.15);
     overflow:hidden;flex-direction:column;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .2s ease, visibility .2s ease;
   }
-  .window.open{display:flex}
+  .window.open{opacity:1;visibility:visible;pointer-events:auto}
   .titlebar{
     height:34px;flex:0 0 auto;position:relative;display:flex;align-items:center;padding:0 12px;
     background:linear-gradient(#fbf1f5,#f3e2ea);border-bottom:1px solid #e6d3dd;cursor:grab;
@@ -86,6 +88,7 @@
     font-size:13px;font-weight:700;color:#6b4c5a;
   }
   .window-body{padding:22px 26px;overflow:auto;font-size:14px;line-height:1.75;color:#4a3a42}
+  #win-list{height:min(560px,70vh)}
 
   /* notice text */
   .notice-body .tag{font-weight:800;letter-spacing:.2px}
@@ -269,7 +272,7 @@
     :root{ --bar-h:44px; }
     .menubar{ padding:0 10px; font-size:12px; }
     .menubar .left{ gap:10px; }
-    .menu-item{ font-size:11.5px; }
+    .menu-icon{ height:24px; }
     .menubar .heart-logo{ font-size:14px; }
     .menubar .right{ gap:8px; }
     .wifi-icon{ width:14px; height:14px; }
@@ -310,10 +313,10 @@
 <div class="menubar">
   <div class="left">
     <span class="heart-logo">♥</span>
-    <span class="menu-item" data-open="notice">Notice</span>
-    <span class="menu-item" data-open="couple">Couple</span>
-    <span class="menu-item" data-open="link">Link</span>
-    <span class="menu-item" data-open="list">List</span>
+    <span class="menu-item"><img class="menu-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABJCAMAAAD15dP0AAAAYFBMVEWZXm+vlJvZk6XYxcvCXnqaeoLFboZ9Ymn///+xWXL4vsz3wc7tmK+zYnj04uiZV2n00tmzd4eYZXPBYnuuh5LCeY3Ol6blpLXx3ePGhpf+8fayk5vVu8G1bIHLqLLStLwjDl5fAAAAIHRSTlP//////////wD//////////////////////////////3iTcTEAAATUSURBVHjavZmLmqsoDIC1ndkVU1QUrbe27/+WB4Jyx9qzM5vvmxmnLflJCCGhWfHLkqk/K6VZxodhWMuxmue/UFSt0FSV9b8L4MQVmn8M6Ptpugwo0zRxNoYAKkSpJ4R9DJDjO62CkMYBZJ4FhH8KAJyhpWH5YcDTdoGU6w6Yq9dYZYz1vfxBEQ9Zy1fgy7K02RvXzFXzncM47INxvJCM53m7CgBDHpRlCbuIR3rOFvbQnzNjpa6yRKc8BQBV1aUnxlmHy205Xc5QD4dNAxeAzAEoPJQnV6O1AAAhoN0BmTt/OGuB8VAdBTABaHcDbf1lvUuWvcbmGtnbI1+e3+oT8jd1NQC4LvIB1mTQzRACfMPBI2jAFAIcQcAQBxCMmhigNACeBmDY0cRKbyubsGADML0P/PdLHdEIoClAXGAPE2b2AUTmjz8JwEzPANY9igKAyO2b4P6cKKOYalAY54yWB6IBVRKwaR/HqkHAdkzonUtJxO8B4FHE94EBCEFATwJxQ8F3rgpTWuxrEMzHA0xxgJUe4y6aXYAVc+Ouf7QA1AHseoPpg0mXlQOwTFYAM7terYDICLTdEtxdD7j70zeARgNuKPJNMN6hnlegQam91/0IUbq0BYwmAeQcwI8QCzDrVLEByp8FYBT9OoD5gHGPoDG1Bl/eGoC7xj6AugBLRG3wwApBfUYDuk5ELH2whxCZOpx9EAAykgRs6Q5zkcxE2gJZwSXPGnuRTaqIAKRqDfjquu6xAah4FgB11kCYjzwLEJAlLVAPE9adgQVQwiFgOLTAlh5z9QYgBAGQ8JAFAA8wJAFqDbbkRqWHDk7xQQPGIpKLrARJVT2ra/r9wJFrQKxCN5K2VTYtrPMglXEjgK7DVaapjRYD1N78lWN3ANWkr10/esm34AzAie3wEMAXlP50qlDD6x3AUlXFVrHYqpUQoV4uwhEAy3eKgJXzlrdqzzg1PviAae85OrkrLC5EpKxnu4Uaw2kKudx2+ccpUKmc/s0IDf0ojwIbsPgAEgEsKQCJidsnf9ue1it7cwHMApAPAf9GAZ4F3Gmc3gBootPfnNl5gN61IAIwNZ96ql1AseZLvojGM883glwINfwupFcNl11Yy5fv2yLrVatzvKN4cc49gJEJY8Kan4zg3p5UYQpr309r6rbFkjIEbLUpDVsDHzCfAIAXQDe57dj/AmDvXVSdAIiWVEx20AMH6SLHgtl09kb/QLDrvT7zfE0BsBalDJx7C8CD17Ggck8ZO8PVTjAEFqi+DYLWAkoEvAIXgX+SkaChOwSYtry3Nr+1yBC9Q/kYAJsFPiBSsRBnQwYANJ15Yy7Yo4nGw7i2bTlrd+8FgDoG4HXbXlpIXiWkGvF7/PaB0ZpdHUAdXvk4gPYkQI2PXArm6bM1BaBvAHkK4LuWBqFt3UXdvQrbAjzdA2cP7bDrPWuBLhewJKL0FUZRYzcznwKgNoOrw30QBQzvLQiP43MAdYP6fAOA7QLqA4CW1I3XfwPQ0gVE7japLAyeEHFRMptWrZRvxqHYsrs8G7LntSoi15qVvL+/CHVKad2+8FuJsaneHDi+MYcXs9a8x8OvWA4Ah9+FDPHY/AiwHt6+/zXAlMuv3wHUNW3l5RNbrkeARd4zTK/19WyKzwA/Jn8A+n8VZ7nTNb8AAAAASUVORK5CYII=" alt="Notice"></span>
+    <span class="menu-item"><img class="menu-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABgCAMAAABmDq8QAAAAYFBMVEWkgF+fiIF+cWCdYzuFbmDBhWPfv8z///+nc1D99u78y9yZdluUeWTz0+L9zOHx09r3tc357Or66tqWg2+ldWb98dyMa0+tbVD3s7ylhmyrbWfbydGkloHnwbp0blh7dVvc/bKjAAAAIHRSTlP/////////AP///////////////////////////////207WIcAAASdSURBVHja7Zlpc9wgDIbd0xaHWfCx8abH//+XlWDBYCOvN8102pnqQ5Ma5UFgEK9w076XNek3yJ4C2m+QLExwt4nngHWwWpXUKiWDdV2nLEsa5GrKQS0m1WXGk3I36dqHJAcsSR6ScMhuUHfDqAcHlVm35PZNJb/CrUkdKcjf3IC8wcIuHjlA7jcQriBhxDJ/YTAsXTe7bUzkVoxbNegWSZbgshwz+EmTkC0yDCW4FXGSmwpRNiFK1UkFthwHveM8zNZaelqsNTWjWyKpYVZTnDitjQ6Ti49oWtfxDovENRtA2hgTInXRrfGzPaZ+tBA6Dyy9h3Jk2J9py5YmrKM0DCQVLitJFaSNWyDRSkv+uu9FWwujJBkhVrduS8ItDFb3Qls0nmTJTfTC0M86SdM0Yl8azViWZIKXoB/aVklGY0/BegMHJJHMsKTV5bdIOpIoMthO8krKOgxubyXp/6RzpP4hyfwn/UkSPjL90yQNa0L0OTPkWENZ7i0kdSe1apmVxTRnjQ5L6hSpx1SOCY1OEjWrH/5soVNFdePiKG2a8yQ6AdWCp7Lz51JDhyO0srviyYlNNFnnSCaqEpmf5nSWShsOjZ5I5vE8mXgG/xOk7u8iQRvdgFZUTtrrAhM6Q12A/xu65BJjQq2HqwyXpzbFKqiQyAHX8CvJlG8S/xK2KjrxiWQPSXEtefUGez0ex2yOSSIII7/zXV3Zy06SL1CnhzEZ2rm+tU76gEP+6ZwD0hB3kpxjbTHNUavQxrU4SSh781KiKeueaV7GQnytdv1y7ZIIVnJciM+Qwh9/GrMBXRNoxl9V6nK5bkTwriorF6MsYspbkBRkONRjQiWLsjgbXYEaU0w4ulEubFWGlYMaMGutNQBNa2lZAeO8eK7PU7aHzpgf+19IkpatFN8lpjeR3LvNE18HqyeuCfwO3q1MzHGhDn6GVKmDIdRffkfa88Or1sHK18FP3YD40lYtWR3sTR5dNtQ5KWPLRyT+koZazpCgjVcQH/eTHC0/RfiYUqrcvch9izomjfHWhCXJMyTwCpQhyW0LPzp4/Sq+PybN34V4fUC6XC4vHTtPKRu/XC7imGTPka5IukBVHRak8eG78yRe0zl/EYAut9ttHMfb7cNuadJTaryh14Xcx6oSwzNcCxLkL9Qjmtiueoz4xVtQ7Xis1zWdF9k91gmXaNudCKlF9N7EyJK87kv+u9GtJJJ+RLoypIBiSVlMd2Njwn5EKIP8P7sksBY/miPJO6kwvRtd3up7ZEi+rd9crrAkmifjSW2ZfaUkAbnevpjK6OjGqLguEKNMF3BNSu6gcDmOPijszdpCsGV3mjr2RO5m1XXZebeQRgrD6zWf1FNMHaeiw6YK89Rr/phJ1St7Fx1UNPva2uyyr48kRkXTpbEy4QbO8KQwSyjK6WRwrIqGJqZL9oj6nGXUuoqGPANJeyAHrl4J8yo6TnuQ4HxMisnyW9KwdPRNQvK3/wOuYgKpY5IF4yb/KSB9C9gaFjYTXUlDe0hq66I+/5zBfYtpTnwLKc21T5LCF5xtQGjwXEztts6IVd40PUs60ITtO5FY+wXEPvPZnTJnwwAAAABJRU5ErkJggg==" alt="Couple"></span>
+    <span class="menu-item"><img class="menu-icon" src="data:image/png;base64,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" alt="Link"></span>
+    <span class="menu-item"><img class="menu-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABACAMAAADS6oI8AAAAYFBMVEX////+6PD9o73+2eX7qMHvtcX8x9f20Nv+8fX/nr3/zeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABD3TDRAAAAIHRSTlMA/////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAOfTLAMAAAE7SURBVHja7djRdoMgDAZgE5JI9/4PvKjsFDbEiHCc1f+qtYVPW5IjDkMa5xz4XwdWA8P+IKIAQHJgNXw7gMM4QtJIAjjIxC2fmf8Kyp1eeActAO4NCHMwSF+JAeA5ZmAa857PbwNRKgDoB+gS6gOU6qA0Oevy6wvgucAo4jVxN/VRPx2XximaSoDiNVO6MqoE0ArgmcBraJG1phrqZ1xKye1ZUzcE/FzY1A8ILe0BykDXOjgZYJojaz/icWBp/f0A+ghAvyvBMbfrvwDm+1EK8AGAqgBqBaR3tqXb93y7pmkDgD9nZAXADiSD/AN8MECbwL5U1MH9AIoBagqYdzjXB6I9mi3powTJrPweAFwOIOoLvGf8J8CrHvjSzabpuci0DdKS4O3uw3U30T6MfoDN519YzuH9zPWBRvkG3OYULSAM6ysAAAAASUVORK5CYII=" alt="List"></span>
   </div>
   <div class="right">
     <span class="wifi-icon">
@@ -527,21 +530,28 @@ mobileMQ.addEventListener('change', updateClock);
 (function(){
   const callNotif = document.getElementById('callNotif');
   const ft = document.getElementById('win-facetime');
-  let messageAdded = false;
+  let msgDiv = null;
 
   document.getElementById('declineBtn').addEventListener('click', ()=>{
     callNotif.classList.remove('ringing');
-    if(messageAdded) return;
-    messageAdded = true;
-    const div = document.createElement('div');
-    div.className = 'msg-notif';
-    div.innerHTML = `<div class="row1"><span class="bubble">💬</span><span class="sender">강아지💙</span><span class="time">now</span></div><div class="content">왜 전화 안 받아? ㅠㅠ</div><div class="msg-close">✕</div>`;
-    div.querySelector('.msg-close').addEventListener('click', ()=> div.remove());
-    document.getElementById('notifStack').appendChild(div);
+    if(msgDiv){
+      msgDiv.remove();
+      msgDiv = null;
+      return;
+    }
+    msgDiv = document.createElement('div');
+    msgDiv.className = 'msg-notif';
+    msgDiv.innerHTML = `<div class="row1"><span class="bubble">💬</span><span class="sender">강아지💙</span><span class="time">now</span></div><div class="content">왜 전화 안 받아? ㅠㅠ</div><div class="msg-close">✕</div>`;
+    msgDiv.querySelector('.msg-close').addEventListener('click', ()=>{ msgDiv.remove(); msgDiv = null; });
+    document.getElementById('notifStack').appendChild(msgDiv);
   });
 
   document.getElementById('acceptBtn').addEventListener('click', ()=>{
     callNotif.classList.remove('ringing');
+    if(ft.classList.contains('open')){
+      ft.classList.remove('open');
+      return;
+    }
     const r = callNotif.getBoundingClientRect();
     ft.style.top = (r.bottom + 10) + 'px';
     ft.style.right = '18px';
@@ -555,14 +565,25 @@ mobileMQ.addEventListener('change', updateClock);
 
 /* ---------------- window manager ---------------- */
 let zTop = 500;
+const puppyInnerWindows = ['win-notice','win-couple','win-link','win-list'];
 function openWindow(id){
   const w = document.getElementById(id);
   if(!w) return;
   if(mobileMQ.matches){
     w.style.left = '50%';
-    w.style.top = '50%';
     w.style.right = 'auto';
-    w.style.transform = 'translate(-50%,-50%)';
+    if(puppyInnerWindows.includes(id)){
+      const stack = document.getElementById('notifStack');
+      const gap = 14;
+      const top = stack.getBoundingClientRect().bottom + gap;
+      w.style.top = top + 'px';
+      w.style.transform = 'translateX(-50%)';
+      w.style.maxHeight = `calc(100vh - ${top + gap}px)`;
+    } else {
+      w.style.top = '50%';
+      w.style.transform = 'translate(-50%,-50%)';
+      w.style.maxHeight = '';
+    }
   }
   w.classList.add('open');
   zTop += 1; w.style.zIndex = zTop;
@@ -571,19 +592,19 @@ function closeWindow(el){
   const w = el.closest('.window');
   if(w) w.classList.remove('open');
 }
-document.querySelectorAll('.menu-item[data-open]').forEach(el=>{
-  el.addEventListener('click', ()=> openWindow('win-'+el.dataset.open));
-});
 document.querySelectorAll('.window').forEach(w=>{
   w.addEventListener('mousedown', ()=>{ zTop+=1; w.style.zIndex = zTop; });
 });
 document.querySelectorAll('[data-close]').forEach(el=>{
   el.addEventListener('click', (e)=>{ e.stopPropagation(); closeWindow(el); });
 });
-/* click outside an open window closes it (puppy folder stays open) */
+/* click outside an open window closes it (puppy folder stays open; the call
+   buttons manage the facetime window themselves, so they're exempt) */
 document.addEventListener('mousedown', (e)=>{
+  const skipFacetime = e.target.closest('#acceptBtn, #declineBtn');
   document.querySelectorAll('.window.open').forEach(w=>{
     if(w.id === 'win-puppy') return;
+    if(skipFacetime && w.id === 'win-facetime') return;
     if(!w.contains(e.target)) w.classList.remove('open');
   });
 });
