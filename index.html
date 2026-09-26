@@ -150,18 +150,19 @@
   /* couple: flip cards with password gate */
   .couple-body{display:flex;flex-direction:column;gap:20px}
   .flip-card{
-    perspective:1300px;height:230px;
+    perspective:1300px;-webkit-perspective:1300px;height:230px;
     transition:transform .2s ease, filter .2s ease;
   }
   .flip-card:hover{transform:translateY(-4px) scale(1.015)}
   .flip-inner{
     position:relative;width:100%;height:100%;transition:transform .6s;
-    transform-style:preserve-3d;cursor:pointer;border-radius:16px;
+    transform-style:preserve-3d;-webkit-transform-style:preserve-3d;
+    cursor:pointer;border-radius:16px;will-change:transform;
   }
   .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
   .flip-front,.flip-back{
     position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-    border-radius:16px;overflow:hidden;
+    border-radius:16px;overflow:hidden;will-change:transform;
     box-shadow:0 8px 18px rgba(170,110,140,.25);
   }
   .flip-front{
