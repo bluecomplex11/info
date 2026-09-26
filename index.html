@@ -580,9 +580,10 @@ document.querySelectorAll('.window').forEach(w=>{
 document.querySelectorAll('[data-close]').forEach(el=>{
   el.addEventListener('click', (e)=>{ e.stopPropagation(); closeWindow(el); });
 });
-/* click outside an open window closes it */
+/* click outside an open window closes it (puppy folder stays open) */
 document.addEventListener('mousedown', (e)=>{
   document.querySelectorAll('.window.open').forEach(w=>{
+    if(w.id === 'win-puppy') return;
     if(!w.contains(e.target)) w.classList.remove('open');
   });
 });
