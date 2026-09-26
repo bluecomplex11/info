@@ -160,7 +160,8 @@
   }
   .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
   .flip-front,.flip-back{
-    position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;overflow:hidden;
+    position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border-radius:16px;overflow:hidden;
     box-shadow:0 8px 18px rgba(170,110,140,.25);
   }
   .flip-front{
@@ -184,6 +185,7 @@
     position:absolute;top:14px;right:16px;z-index:1;
     background:#fbd6e4;color:#a8395f;font-weight:800;font-size:12px;
     padding:5px 13px;border-radius:999px;
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
   }
   .flip-back{
     background:#fff6f8;transform:rotateY(180deg);
